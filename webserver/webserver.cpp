@@ -63,9 +63,9 @@ void WebServer::log_write()
 {
     if (0 == m_close_log) {
         //初始化日志
-        if (1 == m_log_write)
+        if (1 == m_log_write) // 异步写入日志器
             Log::get_instance()->init("./ServerLog", m_close_log, 2000, 800000, 800);
-        else
+        else                  // 同步写入日志器
             Log::get_instance()->init("./ServerLog", m_close_log, 2000, 800000, 0);
     }
 }
@@ -87,7 +87,7 @@ void WebServer::thread_pool() {
 }
 
 void WebServer::eventListen() { //网络编程基础步骤
-    
+    // 创建服务器套接字
     m_listenfd = socket(PF_INET, SOCK_STREAM, 0);
     assert(m_listenfd >= 0);
 
@@ -106,7 +106,7 @@ void WebServer::eventListen() { //网络编程基础步骤
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = htonl(INADDR_ANY);
     address.sin_port = htons(m_port);
-
+    // listen开启服务器端套接字的监听
     int flag = 1;
     setsockopt(m_listenfd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag));
     ret = bind(m_listenfd, (struct sockaddr *)&address, sizeof(address));
@@ -116,6 +116,7 @@ void WebServer::eventListen() { //网络编程基础步骤
     ret = listen(m_listenfd, 5);
     assert(ret >= 0);
 
+    // 打开定时器
     utils.init(TIMESLOT);
 
     //epoll创建内核事件表
@@ -126,11 +127,13 @@ void WebServer::eventListen() { //网络编程基础步骤
     utils.addfd(m_epollfd, m_listenfd, false, m_LISTENTrigmode);
     http_conn::m_epollfd = m_epollfd;
 
+    // 创建管道，用于处理Linux信号通信
     ret = socketpair(PF_UNIX, SOCK_STREAM, 0, m_pipefd);
     assert(ret != -1);
     utils.setnonblocking(m_pipefd[1]);
     utils.addfd(m_epollfd, m_pipefd[0], false, 0);
 
+    // 添加信号处理
     utils.addsig(SIGPIPE, SIG_IGN);
     utils.addsig(SIGALRM, utils.sig_handler, false);
     utils.addsig(SIGTERM, utils.sig_handler, false);
@@ -180,7 +183,7 @@ void WebServer::deal_timer(util_timer *timer, int sockfd) {
 bool WebServer::dealclientdata() {
     struct sockaddr_in client_address;
     socklen_t client_addrlength = sizeof(client_address);
-    if (0 == m_LISTENTrigmode) {
+    if (0 == m_LISTENTrigmode) { // LT
         int connfd = accept(m_listenfd, (struct sockaddr *)&client_address, &client_addrlength);
         if (connfd < 0) {
             LOG_ERROR("%s:errno is:%d", "accept error", errno);
@@ -192,7 +195,7 @@ bool WebServer::dealclientdata() {
             return false;
         }
         timer(connfd, client_address);
-    } else {
+    } else { // ET
         while (true) {
             int connfd = accept(m_listenfd, (struct sockaddr *)&client_address, &client_addrlength);
             if (connfd < 0) {
