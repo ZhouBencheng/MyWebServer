@@ -1,26 +1,62 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>WebServer</title>
-    </head>
-    <body>
-    <br/>
-    <br/>
-    <div align="center"><font size="5"> <strong>是时候做出选择了</strong></font></div>
-	<br/>
-		<br/>
-		<form action="5" method="post">
- 			<div align="center"><button type="submit">xxx.jpg</button></div>
-                </form>
-		<br/>
-                <form action="6" method="post">
-                        <div align="center"><button type="submit" >xxx.avi</button></div>
-                </form>
-		<br/>
-		<form action="7" method="post">
- 			<div align="center"><button type="submit">关注我</button></div>
-                </form>
-        </div>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <title>WebServer</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        .button {
+            display: block;
+            width: 200px;
+            margin: 10px auto;
+            padding: 15px 0;
+            font-size: 16px;
+            color: #333;
+            background-color: #ddd;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #bbb;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title"><strong>请选择</strong></div>
+        <form action="5" method="post">
+            <button class="button" type="submit">风景</button>
+        </form>
+        <form action="6" method="post">
+            <button class="button" type="submit">视频</button>
+        </form>
+        <form action="7" method="post">
+            <button class="button" type="submit">看看这里</button>
+        </form>
+    </div>
+</body>
 </html>

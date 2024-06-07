@@ -27,8 +27,7 @@ WebServer::~WebServer() {
 }
 
 void WebServer::init(int port, string user, string passWord, string databaseName, int log_write, 
-                     int opt_linger, int trigmode, int sql_num, int thread_num, int close_log, int actor_model)
-{
+                     int opt_linger, int trigmode, int sql_num, int thread_num, int close_log, int actor_model) {
     m_port = port;
     m_user = user;
     m_passWord = passWord;
@@ -42,7 +41,7 @@ void WebServer::init(int port, string user, string passWord, string databaseName
     m_actormodel = actor_model;
 }
 
-/// @brief 设置webserver的客户触发方式
+/// @brief 根据TRIGmode出发组合设置webserver的监听和连接触发方式
 void WebServer::trig_mode() {
     if (0 == m_TRIGMode) { //LT + LT
         m_LISTENTrigmode = 0;
@@ -87,8 +86,8 @@ void WebServer::thread_pool() {
     m_pool = new threadpool<http_conn>(m_actormodel, m_connPool, m_thread_num);
 }
 
-void WebServer::eventListen() {
-    //网络编程基础步骤
+void WebServer::eventListen() { //网络编程基础步骤
+    
     m_listenfd = socket(PF_INET, SOCK_STREAM, 0);
     assert(m_listenfd >= 0);
 
@@ -111,6 +110,8 @@ void WebServer::eventListen() {
     int flag = 1;
     setsockopt(m_listenfd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(flag));
     ret = bind(m_listenfd, (struct sockaddr *)&address, sizeof(address));
+    // if (ret < 0)
+    //     printf("bind failed: %s\n" ,strerror(errno));
     assert(ret >= 0);
     ret = listen(m_listenfd, 5);
     assert(ret >= 0);
