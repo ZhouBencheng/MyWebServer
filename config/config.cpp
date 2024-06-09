@@ -28,35 +28,35 @@ void Config::parse_arg(int argc, char*argv[]){
     const char *str = "p:l:m:o:s:t:c:a:";
     while ((opt = getopt(argc, argv, str)) != -1) {
         switch (opt) {
-            case 'p': {
+            case 'p': { // 自定义端口号
                 PORT = atoi(optarg);
                 break;
             }
-            case 'l': {
+            case 'l': { // 选择日志写入方式，同步或异步
                 LOGWrite = atoi(optarg);
                 break;
             }
-            case 'm': {
+            case 'm': { // 选择listenfd和connfd的触发模式
                 TRIGMode = atoi(optarg);
                 break;
             }
-            case 'o': {
+            case 'o': { // 优雅的关闭连接
                 OPT_LINGER = atoi(optarg);
                 break;
             }
-            case 's':{
+            case 's':{ // 指定数据库连接数量
                 sql_num = atoi(optarg);
                 break;
             }
-            case 't': {
+            case 't': { // 指定线程数量
                 thread_num = atoi(optarg);
                 break;
             }
-            case 'c': {
+            case 'c': { // 是否关闭日志
                 close_log = atoi(optarg);
                 break;
             }
-            case 'a': {
+            case 'a': { // 选择反应类型，reactor or proactor
                 actor_model = atoi(optarg);
                 break;
             }
